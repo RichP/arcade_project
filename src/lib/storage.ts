@@ -78,7 +78,7 @@ async function ensureGamesTable() {
     await pool.query(
       `create table if not exists games (
          id text primary key,
-      slug text,
+         slug text,
          title text not null,
          featured boolean,
          genre text[],
@@ -91,11 +91,13 @@ async function ensureGamesTable() {
          thumbnail text,
          description text,
          tags text[],
-         url text
+         url text,
+         updated_at timestamptz default now()
        )`
     );
     // In case of older deployments missing the column
     await pool.query(`alter table games add column if not exists slug text`);
+    await pool.query(`alter table games add column if not exists updated_at timestamptz default now()`);
   // Helpful index for slug lookups and enforce uniqueness when not null
   await pool.query(`create index if not exists games_slug_idx on games (slug)`);
   await pool.query(`create unique index if not exists games_slug_unique on games (slug) where slug is not null`);
@@ -127,7 +129,7 @@ async function dbListGames(): Promise<Game[]> {
   await ensureGamesTable();
   const pool = await getPool();
   const { rows } = await pool.query(
-  `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url
+  `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at
      from games order by id asc`
   );
   return (rows as Record<string, unknown>[]).map(dbToGame);
@@ -259,7 +261,7 @@ async function dbGetGame(id: string): Promise<Game | undefined> {
   await ensureGamesTable();
   const pool = await getPool();
   const { rows } = await pool.query(
-  `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url
+  `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at
      from games where id = $1 limit 1`,
     [id]
   );
@@ -270,8 +272,8 @@ async function dbGetGameBySlug(slug: string): Promise<Game | undefined> {
   await ensureGamesTable();
   const pool = await getPool();
   const { rows } = await pool.query(
-    `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url
-     from games where slug = $1 limit 1`,
+  `select id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at
+   from games where slug = $1 limit 1`,
     [slug]
   );
   return rows[0] ? dbToGame(rows[0] as Record<string, unknown>) : undefined;
@@ -293,15 +295,16 @@ function dbToGame(r: Record<string, unknown>): Game {
     thumbnail: (r.thumbnail as string | null) ?? undefined,
     description: (r.description as string | null) ?? undefined,
     tags: (r.tags as string[] | null) ?? undefined,
-    url: (r.url as string | null) ?? undefined,
+  url: (r.url as string | null) ?? undefined,
+  updatedAt: r.updated_at ? new Date(String(r.updated_at)).toISOString() : undefined,
   };
 }
 
 async function dbInsert(game: Game): Promise<Game> {
   await ensureGamesTable();
   const pool = await getPool();
-  const q = `insert into games (id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url)
-             values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+  const q = `insert into games (id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at)
+             values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15, now())
              on conflict (id) do update set
                slug = excluded.slug,
                title = excluded.title,
@@ -316,8 +319,9 @@ async function dbInsert(game: Game): Promise<Game> {
                thumbnail = excluded.thumbnail,
                description = excluded.description,
                tags = excluded.tags,
-               url = excluded.url
-             returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url`;
+               url = excluded.url,
+               updated_at = now()
+             returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at`;
   const params = [
     game.id,
     game.slug ?? null,
@@ -353,7 +357,8 @@ async function dbUpdate(id: string, patch: Partial<Game>): Promise<Game | undefi
     params.push(v ?? null);
   }
   params.push(id);
-  const q = `update games set ${cols.join(", ")} where id = $${i} returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url`;
+  cols.push(`updated_at = now()`);
+  const q = `update games set ${cols.join(", ")} where id = $${i} returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at`;
   const { rows } = await pool.query(q, params);
   return rows[0] ? dbToGame(rows[0] as Record<string, unknown>) : undefined;
 }
@@ -362,7 +367,7 @@ async function dbDelete(id: string): Promise<Game | undefined> {
   await ensureGamesTable();
   const pool = await getPool();
   const { rows } = await pool.query(
-  `delete from games where id = $1 returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url`,
+  `delete from games where id = $1 returning id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at`,
     [id]
   );
   return rows[0] ? dbToGame(rows[0] as Record<string, unknown>) : undefined;
@@ -372,8 +377,8 @@ async function dbUpsertMany(items: Game[]): Promise<number> {
   if (items.length === 0) return 0;
   await ensureGamesTable();
   const pool = await getPool();
-  const q = `insert into games (id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url)
-             values ${items.map((_, i) => `(${paramPlaceholders(15, i * 15)})`).join(",")}
+  const q = `insert into games (id, slug, title, featured, genre, platforms, mobile, height, width, rating, released, thumbnail, description, tags, url, updated_at)
+             values ${items.map((_, i) => `(${paramPlaceholders(16, i * 16)})`).join(",")}
              on conflict (id) do update set
                slug = excluded.slug,
                title = excluded.title,
@@ -388,7 +393,8 @@ async function dbUpsertMany(items: Game[]): Promise<number> {
                thumbnail = excluded.thumbnail,
                description = excluded.description,
                tags = excluded.tags,
-               url = excluded.url`;
+               url = excluded.url,
+               updated_at = now()`;
   const params = items.flatMap((g) => [
     g.id,
     g.slug ?? null,
@@ -405,6 +411,7 @@ async function dbUpsertMany(items: Game[]): Promise<number> {
     g.description ?? null,
     g.tags ?? null,
     g.url ?? null,
+    new Date().toISOString(),
   ]);
   await pool.query(q, params);
   return items.length;

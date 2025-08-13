@@ -8,6 +8,7 @@ import UIEffects from "@/components/UIEffects";
 import Toaster from "@/components/Toaster";
 import CookieConsent from "@/components/CookieConsent";
 import PWA from "@/components/PWA";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/SEO";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
     default: "Arcade",
     template: "%s • Arcade",
   },
-  description: "Play featured and classic web games in a sleek dark UI.",
+  description: "Play featured and classic free web games in a sleek dark UI. Updated regularly with new titles.",
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
   manifest: "/manifest.webmanifest",
   icons: {
@@ -40,6 +41,17 @@ export const metadata: Metadata = {
       { url: "/vercel.svg", type: "image/svg+xml" },
     ],
   },
+  openGraph: {
+    title: "Arcade",
+    description: "Play featured and classic free web games in a sleek dark UI.",
+    type: "website",
+    url: process.env.NEXT_PUBLIC_SITE_URL || undefined,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Arcade",
+    description: "Play featured and classic free web games in a sleek dark UI.",
+  },
 };
 
 export default function RootLayout({
@@ -47,6 +59,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "";
+  const siteJson = websiteJsonLd(base);
+  const orgJson = organizationJsonLd(base);
   return (
   <html lang="en">
   <body className={`${geistSans.variable} ${geistMono.variable} ${displayFont.variable} antialiased`}>
@@ -73,6 +88,9 @@ export default function RootLayout({
         <Toaster />
   <CookieConsent />
         <PWA />
+  {/* Global structured data */}
+  {siteJson ? <JsonLd data={siteJson} /> : null}
+  {orgJson ? <JsonLd data={orgJson} /> : null}
       </body>
     </html>
   );

@@ -14,4 +14,5 @@ export interface Game {
   description?: string;
   tags?: string[];
   url?: string;
+  updatedAt?: string; // server-managed last update timestamp (ISO)
 }

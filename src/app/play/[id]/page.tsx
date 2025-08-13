@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import { storage } from "@/lib/storage";
 import { notFound, permanentRedirect, redirect } from "next/navigation";
 import { fallbackEmojiForGenre } from "@/lib/genreEmoji";
+import { JsonLd, videoGameJsonLd, breadcrumbsJsonLd } from "@/components/SEO";
 
 // Force this route to render dynamically so updates to games.json reflect without a rebuild
 export const dynamic = "force-dynamic";
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   const g = await getGameById(id);
   if (!g) return { title: "Game not found" };
   const title = `${g.title} • Play`;
-  const description = g.description || `Play ${g.title} online.`;
+  const baseDesc = g.description || `Play ${g.title} online.`;
+  const description = baseDesc.length > 155 ? baseDesc.slice(0, 152) + "..." : baseDesc;
   const images = g.thumbnail ? [g.thumbnail] : undefined;
   return {
     title,
@@ -96,6 +98,32 @@ export default async function PlayPage({ params }: { params: Promise<{ id: strin
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Structured data for the game */}
+      {(
+        () => {
+          const base = process.env.NEXT_PUBLIC_SITE_URL || "";
+          const data = videoGameJsonLd({
+                baseUrl: base,
+                id: game.id,
+                name: game.title,
+                description: game.description || undefined,
+                image: game.thumbnail || undefined,
+                genres: Array.isArray(game.genre) ? game.genre : undefined,
+                urlPath: `/play/${encodeURIComponent(game.slug || game.id)}`,
+                ratingValue: game.rating,
+                ratingCount: game.rating ? Math.max(1, Math.round((game.rating * 10))) : undefined,
+              });
+              const crumbs = breadcrumbsJsonLd(base, [
+                { name: "Home", path: "/" },
+                ...(Array.isArray(game.genre) && game.genre[0] ? [{ name: game.genre[0], path: `/?genre=${encodeURIComponent(game.genre[0])}` }] : []),
+                { name: game.title, path: `/play/${encodeURIComponent(game.slug || game.id)}` },
+              ] )
+              return <>
+                <JsonLd data={data} />
+                {crumbs ? <JsonLd data={crumbs} /> : null}
+              </>;
+        }
+      )()}
       {/* Main column */}
       <div className="lg:col-span-2 space-y-4">
         {/* Player */}

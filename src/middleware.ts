@@ -54,7 +54,8 @@ export async function middleware(req: NextRequest) {
     pathname.startsWith("/api/admin/login") ||
     pathname.startsWith("/privacy") ||
     pathname.startsWith("/cookies") ||
-    pathname.startsWith("/terms")
+  pathname.startsWith("/terms") ||
+  pathname.startsWith("/sitemap")
   ) {
     return NextResponse.next();
   }

@@ -340,6 +340,7 @@ export default function SidebarNav() {
                 <a href="/privacy" className="hover:text-white/80">Privacy Policy</a>
                 <a href="/cookies" className="hover:text-white/80">Cookies</a>
                 <a href="/terms" className="hover:text-white/80">Terms</a>
+                <a href="/sitemap" className="hover:text-white/80">Sitemap</a>
               </nav>
               <p className="mt-2">&copy; {new Date().getFullYear()} Arcade</p>
             </footer>

@@ -1,16 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark theme */
+  --background: #0f1018; /* page background */
+  --foreground: #ffffff; /* default text */
+  --nav-bg: #13151e; /* navbar background */
+  --primary: #f59e0b; /* primary accent (buttons, focus). Was #7c3aed (purple). */
+  --on-primary: #111111; /* text/icon color on primary backgrounds (strong contrast on amber) */
+  --primary-hover: #d97706; /* hover state for primary (amber 600) */
+  --primary-active: #b45309; /* active state for primary (amber 700) */
+  --sidebar-w: 224px; /* default sidebar width (expanded) */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* Alternative accents to consider:
+   teal:   #14b8a6
+   blue:   #3b82f6
+   emerald:#10b981
+   amber:  #f59e0b
+*/
+
+/* Theme tokens removed to avoid CSS at-rule errors; using CSS vars directly instead. */
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -22,5 +31,372 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
+    Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+/* Skip link (visible on focus) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 12px;
+  background: #111;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transition: top 150ms ease;
+  z-index: 10001;
+}
+.skip-link:focus { top: 12px; outline: 2px solid var(--primary); }
+
+/* Display font for headings */
+h1, h2, h3, .display {
+  font-family: var(--font-display), var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  letter-spacing: 0.2px;
+}
+
+/* Better focus ring */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbars for elements that opt-in with no-scrollbar */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Reusable UI utilities (theme-aware) */
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--on-primary);
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 80ms ease;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  box-shadow: 0 8px 26px rgba(245, 158, 11, 0.25);
+}
+.btn-primary:active {
+  background-color: var(--primary-active);
+  transform: scale(0.98);
+}
+
+/* Better focus on small overlay pills and links */
+.focus-pill:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.15);
+}
+
+.chip {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 80ms ease;
+}
+.chip:hover {
+  background-color: var(--primary-hover);
+  color: var(--on-primary);
+  border-color: var(--primary-active);
+}
+.chip:active {
+  background-color: var(--primary-active);
+  transform: scale(0.98);
+}
+
+/* Click ripple (delegated via UIEffects). Attach to .btn-primary, .chip, .carousel-arrow, or any [data-ripple]. */
+.btn-primary,
+.chip,
+.carousel-arrow,
+[data-ripple] {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary.is-rippling::after,
+.chip.is-rippling::after,
+.carousel-arrow.is-rippling::after,
+[data-ripple].is-rippling::after {
+  content: "";
+  position: absolute;
+  left: var(--rx, 50%);
+  top: var(--ry, 50%);
+  transform: translate(-50%, -50%) scale(0);
+  width: 10px; height: 10px;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.35);
+  filter: blur(0.5px);
+  animation: ripple 420ms ease-out forwards;
+}
+@keyframes ripple {
+  to { transform: translate(-50%, -50%) scale(14); opacity: 0; }
+}
+
+.sidebar-item-active {
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
+}
+.sidebar-item-active:hover {
+  background-color: var(--primary-hover) !important;
+}
+.sidebar-item-active:active {
+  background-color: var(--primary-active) !important;
+}
+
+/* Generic pressable helper */
+.pressable { transition: transform 80ms ease; }
+.pressable:active { transform: scale(0.98); }
+
+/* Featured carousel arrows with sparkle glow */
+.carousel-arrow {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  height: 2.25rem; /* 9 */
+  width: 2.25rem;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  transition: box-shadow 200ms ease, transform 150ms ease, background-color 150ms ease;
+}
+.carousel-arrow:hover {
+  background: rgba(255,255,255,0.14);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.32), 0 0 0 6px rgba(245,158,11,0.10), 0 0 18px rgba(245, 158, 11, 0.25);
+}
+.carousel-arrow::after {
+  content: "";
+  position: absolute;
+  width: 6px; height: 6px;
+  right: 6px; top: 6px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, #fff, #fff0 60%);
+  opacity: 0;
+}
+.carousel-arrow:hover::after {
+  opacity: 1;
+  animation: twinkle 1.2s ease-in-out infinite;
+}
+
+/* See-all micro bounce when revealed */
+.see-all-link .chev { display: inline-block; transition: transform 200ms ease; }
+.see-all-link:hover .chev, .see-all-link:focus-visible .chev { transform: translateX(2px); }
+
+/* Toaster */
+.toaster { position: fixed; right: 12px; bottom: 12px; display: grid; gap: 8px; z-index: 10000; }
+.toast-item { animation: toastIn 220ms ease-out; }
+.toast-inner {
+  background: rgba(17, 17, 17, 0.9);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 8px 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 6px rgba(245,158,11,0.08);
+  backdrop-filter: blur(6px);
+  font-size: 12px;
+}
+@keyframes toastIn {
+  from { transform: translateY(6px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Subtle animated mesh background */
+.mesh-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.25;
+  background:
+    radial-gradient(40% 30% at 20% 20%, #f59e0b22 0%, transparent 60%),
+    radial-gradient(30% 25% at 80% 30%, #34d39922 0%, transparent 60%),
+    radial-gradient(30% 30% at 60% 80%, #818cf822 0%, transparent 60%),
+    radial-gradient(25% 25% at 30% 70%, #f472b622 0%, transparent 60%);
+  transform: translateZ(0);
+  animation: meshFloat 18s ease-in-out infinite alternate;
+}
+
+/* Subtle dotted pattern to reduce empty space, placed behind mesh */
+.pattern-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.08; /* keep very subdued */
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.9) 1px, transparent 1px),
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.7) 1px, transparent 1px);
+  background-size: 24px 24px, 24px 24px;
+  background-position: 0 0, 12px 12px; /* staggered */
+}
+
+@keyframes meshFloat {
+  0% { filter: hue-rotate(0deg) saturate(1); transform: translateY(var(--mesh-parallax-y, 0px)) scale(1); }
+  50% { filter: hue-rotate(10deg) saturate(1.05); transform: translateY(calc(-10px + var(--mesh-parallax-y, 0px))) scale(1.01); }
+  100% { filter: hue-rotate(-10deg) saturate(1); transform: translateY(calc(8px + var(--mesh-parallax-y, 0px))) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh-bg { animation: none; opacity: 0.18; transform: none !important; }
+}
+
+/* CTA aura utility for small glow on hover */
+.cta-aura:hover {
+  box-shadow: 0 0 0 6px rgba(245,158,11,0.08), 0 0 22px rgba(245,158,11,0.20);
+}
+
+/* Tiny card tilt (desktop hover), guarded for reduced motion */
+.game-card {
+  will-change: transform;
+  /* allow magnetic/shine offsets */
+  --mag-tx: 0px;
+  --mag-ty: 0px;
+}
+.game-card:hover {
+  transform: translateY(-4px) rotateX(0.6deg) rotateY(0.6deg) translate(var(--mag-tx), var(--mag-ty));
+}
+@media (prefers-reduced-motion: reduce) {
+  .game-card:hover { transform: none; }
+}
+
+/* Stripe edge fade to hint scroll */
+.stripe-fade {
+  position: relative;
+}
+.stripe-fade::before,
+.stripe-fade::after {
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  z-index: 1;
+}
+.stripe-fade::before {
+  left: 0;
+  background: linear-gradient(to right, var(--background), transparent);
+}
+.stripe-fade::after {
+  right: 0;
+  background: linear-gradient(to left, var(--background), transparent);
+}
+
+/* Rating sparkle (very subtle) */
+.sparkle:hover .sparkle-dot {
+  opacity: 1;
+  animation: twinkle 1.2s ease-in-out infinite;
+}
+.sparkle-dot {
+  opacity: 0;
+  width: 6px; height: 6px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, #fff, #fff0);
+}
+@keyframes twinkle {
+  0%, 100% { transform: scale(0.8); opacity: 0.2; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* Lightweight skeleton shimmer */
+.skeleton { position: relative; overflow: hidden; background: rgba(255,255,255,0.06); border-radius: 8px; }
+.skeleton::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+@keyframes shimmer { to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .skeleton::after { display: none; } }
+
+/* Corner ribbon utility */
+.ribbon {
+  position: absolute;
+  top: 10px;
+  left: -6px;
+  transform: rotate(-12deg);
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: 2px 8px;
+  font-size: 10px;
+  border-radius: 3px;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
+
+/* Shine sweep on thumbnails */
+.thumb-shine { position: relative; overflow: hidden; }
+.thumb-shine::after {
+  content: "";
+  position: absolute; inset: -20%;
+  background: linear-gradient(60deg, transparent 40%, rgba(255,255,255,0.12) 50%, transparent 60%);
+  transform: translateX(-120%) skewX(-10deg);
+  transition: transform 700ms ease;
+  pointer-events: none;
+}
+.game-card:hover .thumb-shine::after { transform: translateX(120%) skewX(-10deg); }
+@media (prefers-reduced-motion: reduce) {
+  .thumb-shine::after { display: none; }
+}
+
+/* Micro badge animations */
+.badge-new { animation: pulseNew 2.2s ease-in-out infinite; transform-origin: center; }
+@keyframes pulseNew {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50% { transform: scale(1.06); filter: brightness(1.1); }
+}
+.ribbon:hover { animation: wobble 1s ease-in-out infinite; }
+@keyframes wobble {
+  0% { transform: rotate(-12deg) translateY(0); }
+  50% { transform: rotate(-10deg) translateY(-1px); }
+  100% { transform: rotate(-12deg) translateY(0); }
+}
+
+/* Favorites empty-state mascot */
+.mascot {
+  display: grid;
+  place-items: center;
+  width: 84px; height: 84px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 40% 35%, rgba(255,255,255,0.15), rgba(255,255,255,0.04));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: inset 0 2px 10px rgba(255,255,255,0.06), 0 12px 28px rgba(0,0,0,0.35);
+}
+.mascot-emoji { font-size: 38px; display: inline-block; }
+.mascot:hover .mascot-emoji { animation: mascotWiggle 1200ms ease-in-out infinite; }
+@keyframes mascotWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  30% { transform: rotate(-6deg); }
+  60% { transform: rotate(5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mascot:hover .mascot-emoji { animation: none; }
+}
+
+/* Subdued, per-tag chips using a CSS variable hue */
+.chip-subdued {
+  --chip-h: 200; /* fallback hue */
+  --chip-bg: hsla(var(--chip-h), 60%, 60%, 0.12);
+  --chip-border: hsla(var(--chip-h), 70%, 55%, 0.25);
+  --chip-text: hsla(var(--chip-h), 85%, 85%, 0.92);
+  background: var(--chip-bg);
+  border-color: var(--chip-border);
+  color: var(--chip-text);
+}
+.chip-subdued:hover, .chip-subdued:focus-visible {
+  --chip-bg: hsla(var(--chip-h), 65%, 60%, 0.18);
+  --chip-border: hsla(var(--chip-h), 75%, 55%, 0.35);
+  --chip-text: hsla(var(--chip-h), 95%, 95%, 1);
 }

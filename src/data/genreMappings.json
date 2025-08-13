@@ -1,0 +1,239 @@
+[
+  {
+    "id": "gm-0001",
+    "name": "Mahjong",
+    "includes": [
+      "3D Mahjong",
+      "Mahjong Connect",
+      "Mahjong Games",
+      "Mahjong Slide",
+      "Mahjong Solitaire",
+      "Mahjong Tower",
+      "Tile Games"
+    ],
+    "emoji": "🀄"
+  },
+  {
+    "id": "gm-0002",
+    "name": "Puzzle",
+    "includes": [
+      "Puzzle",
+      "Puzzle Games",
+      "Puzzles",
+      "Daily Puzzles"
+    ],
+    "emoji": "🧩"
+  },
+  {
+    "id": "gm-0003",
+    "name": "Card",
+    "includes": [
+      "Spider",
+      "Solitaire Games",
+      "Klondike",
+      "Freecell",
+      "Card Games",
+      "Tripeaks & Golf",
+      "Pyramid",
+      "Montana",
+      "card",
+      "solitaire"
+    ],
+    "emoji": "🃏"
+  },
+  {
+    "id": "gm-0004",
+    "name": "Match 3",
+    "includes": [
+      "Bejeweled",
+      "Connect 3",
+      "Match 3 Games",
+      "Collapse Games"
+    ],
+    "emoji": "3️⃣"
+  },
+  {
+    "id": "gm-0005",
+    "name": "Idle",
+    "includes": [
+      "Clicker",
+      "Idle",
+      "Incremental",
+      "clicker",
+      "idle"
+    ],
+    "emoji": "⏱️"
+  },
+  {
+    "id": "gm-0006",
+    "name": "Brain Games",
+    "includes": [
+      "Brain",
+      "Brain Games",
+      "Math Games",
+      "2048 & Merge",
+      "Sudoku",
+      "Memory",
+      "logic"
+    ],
+    "emoji": "🧠"
+  },
+  {
+    "id": "gm-0007",
+    "name": "Word Games",
+    "includes": [
+      "Crosswords",
+      "Word Games"
+    ],
+    "emoji": "🔠"
+  },
+  {
+    "id": "gm-0008",
+    "name": "Hidden Object",
+    "includes": [
+      "Hidden Clues",
+      "Hidden Numbers",
+      "Hidden Object",
+      "Hidden Alphabet",
+      "Hidden Object Games",
+      "Difference Games"
+    ],
+    "emoji": "🔍"
+  },
+  {
+    "id": "gm-0009",
+    "name": "Sports",
+    "includes": [
+      "Sports",
+      "ball",
+      "basketball",
+      "parkour",
+      "soccer",
+      "Soccer",
+      "sports",
+      "world-cup"
+    ],
+    "emoji": "🏀"
+  },
+  {
+    "id": "gm-0010",
+    "name": "Racing",
+    "includes": [
+      "Racing",
+      "formula-1",
+      "car",
+      "racing",
+      "rally",
+      "taxi",
+      "kart",
+      "driving",
+      "drift",
+      "police",
+      "speed",
+      "traffic",
+      "truck"
+    ],
+    "emoji": "🏎️"
+  },
+  {
+    "id": "gm-0011",
+    "name": "snake",
+    "includes": [
+      "Snake",
+      "snake"
+    ],
+    "emoji": "🐍"
+  },
+  {
+    "id": "gm-0012",
+    "name": "Tower Defence",
+    "includes": [
+      "Tower Defense",
+      "tower-defense"
+    ],
+    "emoji": "🏰"
+  },
+  {
+    "id": "gm-0013",
+    "name": "Retro",
+    "includes": [
+      "Retro"
+    ],
+    "emoji": "👾"
+  },
+  {
+    "id": "gm-0014",
+    "name": "Cooking",
+    "includes": [
+      "cooking",
+      "Cooking"
+    ],
+    "emoji": "🍳"
+  },
+  {
+    "id": "gm-0015",
+    "name": "Escape Room",
+    "includes": [
+      "escape",
+      "Escape Games"
+    ],
+    "emoji": "🚪"
+  },
+  {
+    "id": "gm-0016",
+    "name": "Girls",
+    "includes": [
+      "girl",
+      "Girls",
+      "horse",
+      "wedding",
+      "unicorn",
+      "dress-up",
+      "fashion",
+      "love",
+      "princess",
+      "makeup"
+    ],
+    "emoji": "👸🏿"
+  },
+  {
+    "id": "gm-0017",
+    "name": "Pool",
+    "includes": [
+      "Billiards",
+      "pool"
+    ],
+    "emoji": "🎱"
+  },
+  {
+    "id": "gm-0018",
+    "name": "Combat",
+    "includes": [
+      "army",
+      "armor",
+      "shooting",
+      "Shooting",
+      "Shooting & War",
+      "war",
+      "battle",
+      "weapon",
+      "gun",
+      "sniper"
+    ],
+    "emoji": "🪖"
+  },
+  {
+    "id": "gm-0019",
+    "name": "Casual",
+    "includes": [
+      "funny",
+      "fun",
+      "Hypercasual",
+      "io-games",
+      "ninja",
+      "pirate",
+      "skibidi-toilet"
+    ],
+    "emoji": "🪀"
+  }
+]

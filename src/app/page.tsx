@@ -6,6 +6,7 @@ import GameCard from "@/components/GameCard";
 import BecauseYouLiked from "@/components/BecauseYouLiked";
 import { fallbackEmojiForGenre } from "@/lib/genreEmoji";
 import { storage } from "@/lib/storage";
+import { SITE_NAME } from "@/config/site";
 import ConfettiProfileProvider, { type ConfettiProfile } from "@/components/ConfettiProfileProvider";
 
 // Read latest data on each request in production too
@@ -19,7 +20,7 @@ export async function generateMetadata({
   searchParams: Promise<{ genre?: string }>;
 }) {
   const { genre = "" } = await searchParams;
-  let title = "Arcade";
+  let title = SITE_NAME;
   if (genre) {
     const maps = await storage.listGenreMappings();
     const includesIndex = new Map<string, string>();
@@ -33,9 +34,9 @@ export async function generateMetadata({
     }
     const display = includesIndex.get(genre.trim().toLowerCase()) || genre.trim();
     const emoji = emojiByName.get(display);
-    title = `All ${emoji ? emoji + " " : ""}${display} Games | Arcade`;
+  title = `All ${emoji ? emoji + " " : ""}${display} Games | ${SITE_NAME}`;
   } else {
-    title = "Arcade — Play Free Online Games";
+  title = `${SITE_NAME} — Play Free Online Games`;
   }
   return { title };
 }

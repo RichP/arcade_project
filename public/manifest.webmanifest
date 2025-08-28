@@ -1,6 +1,6 @@
 {
-  "name": "Arcade",
-  "short_name": "Arcade",
+  "name": "Zogplay",
+  "short_name": "Zogplay",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0b0e16",

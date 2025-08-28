@@ -9,6 +9,7 @@ import Toaster from "@/components/Toaster";
 import CookieConsent from "@/components/CookieConsent";
 import PWA from "@/components/PWA";
 import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/SEO";
+import { SITE_NAME } from "@/config/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,8 +28,8 @@ const displayFont = Space_Grotesk({
 
 export const metadata: Metadata = {
   title: {
-    default: "Arcade",
-    template: "%s • Arcade",
+    default: SITE_NAME,
+    template: "%s • " + SITE_NAME,
   },
   description: "Play featured and classic free web games in a sleek dark UI. Updated regularly with new titles.",
   metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
@@ -42,14 +43,14 @@ export const metadata: Metadata = {
     ],
   },
   openGraph: {
-    title: "Arcade",
+    title: SITE_NAME,
     description: "Play featured and classic free web games in a sleek dark UI.",
     type: "website",
     url: process.env.NEXT_PUBLIC_SITE_URL || undefined,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arcade",
+    title: SITE_NAME,
     description: "Play featured and classic free web games in a sleek dark UI.",
   },
 };

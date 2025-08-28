@@ -152,11 +152,11 @@ export default function NavBar() {
           </button>
           <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/next.svg"
+            src="/zoglog.svg"
             alt="Website logo"
-            width={32}
-            height={32}
-      className="invert"
+            width={128}
+            height={128}
+            //className="invert"
             priority
           />
           <span className="sr-only">Home</span>

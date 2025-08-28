@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { Game } from "@/types/game";
 import type { GenreMapping } from "@/types/genreMapping";
 import { fallbackEmojiForGenre } from "@/lib/genreEmoji";
+import { SITE_NAME } from "@/config/site";
 
 type IconProps = { className?: string };
 const EmojiIconWrap = ({ glyph, className }: { glyph: string; className?: string }) => (
@@ -342,7 +343,7 @@ export default function SidebarNav() {
                 <a href="/terms" className="hover:text-white/80">Terms</a>
                 <a href="/sitemap" className="hover:text-white/80">Sitemap</a>
               </nav>
-              <p className="mt-2">&copy; {new Date().getFullYear()} Arcade</p>
+              <p className="mt-2">&copy; {new Date().getFullYear()} {SITE_NAME}</p>
             </footer>
           )}
         </div>

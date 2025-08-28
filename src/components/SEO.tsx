@@ -1,4 +1,5 @@
 import React from "react";
+import { SITE_NAME } from "@/config/site";
 
 type JsonLdProps = { data: Record<string, unknown> };
 
@@ -17,7 +18,7 @@ export function websiteJsonLd(baseUrl?: string) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     url: baseUrl,
-    name: "Arcade",
+  name: SITE_NAME,
     potentialAction: {
       "@type": "SearchAction",
       target: `${baseUrl}/search?q={search_term_string}`,
@@ -31,7 +32,7 @@ export function organizationJsonLd(baseUrl?: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Arcade",
+  name: SITE_NAME,
     url: baseUrl,
     logo: `${baseUrl}/vercel.svg`,
   } as const;

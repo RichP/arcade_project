@@ -36,10 +36,10 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [
-      { url: "/vercel.svg", type: "image/svg+xml" },
+      { url: "/zog.svg", type: "image/svg+xml" },
     ],
     apple: [
-      { url: "/vercel.svg", type: "image/svg+xml" },
+      { url: "/zog.svg", type: "image/svg+xml" },
     ],
   },
   openGraph: {

@@ -34,7 +34,7 @@ export function organizationJsonLd(baseUrl?: string) {
     "@type": "Organization",
   name: SITE_NAME,
     url: baseUrl,
-    logo: `${baseUrl}/vercel.svg`,
+    logo: `${baseUrl}/zog.svg`,
   } as const;
 }
 

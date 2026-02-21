@@ -1,4 +1,3 @@
-import React from "react";
 import { SITE_NAME } from "@/config/site";
 
 type JsonLdProps = { data: Record<string, unknown> };

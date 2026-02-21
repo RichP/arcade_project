@@ -1,4 +1,4 @@
-import React, { CSSProperties } from "react";
+import { CSSProperties } from "react";
 
 export function Star({ fraction = 0 }: { fraction?: number }) {
   const pct = Math.max(0, Math.min(1, fraction)) * 100;
